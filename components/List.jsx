@@ -36,7 +36,7 @@ const JsonBinComponent = () => {
         // Reset all users' orders to "No orders"
         const resetUsers = fetchedData.users.map((user) => ({
           ...user,
-          order: 'No orders',
+          order: 'N/A',
         }));
 
         // Update the dateReset to today's date
