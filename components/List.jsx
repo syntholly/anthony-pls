@@ -15,8 +15,7 @@ const JsonBinComponent = () => {
   const [order, setOrder] = useState('');
   const [today] = useState(getCurrentDate());
   const [suggestions, setSuggestions] = useState([]);
-  const [ordersClosed, setOrdersClosed] = useState(false); // State to track if orders are closed
-
+  
   const BIN_ID = '67175be0acd3cb34a89b03d6';
   const API_KEY = '$2a$10$dhDGoYephc6t09M.V6/9gek5W.YLXLVbEejVGieyKqUmelttmPVCe';
   const BASE_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
@@ -36,6 +35,7 @@ const JsonBinComponent = () => {
       const result = await response.json();
       const fetchedData = result.record;
 
+      // Check if the date has reset and reset "closedOrders" as well
       if (fetchedData.dateReset !== getCurrentDate()) {
         const resetUsers = fetchedData.users.map((user) => ({
           ...user,
@@ -46,6 +46,7 @@ const JsonBinComponent = () => {
           ...fetchedData,
           users: resetUsers,
           dateReset: getCurrentDate(),
+          closedOrders: false, // Reset closedOrders on a new day
         };
 
         await updateBin(updatedData);
@@ -142,9 +143,9 @@ const JsonBinComponent = () => {
     const updatedData = {
       ...data,
       users: updatedUsers,
+      closedOrders: true, // Set closedOrders to true
     };
 
-    setOrdersClosed(true); // Set orders to closed state
     await updateBin(updatedData); // Push updated data to JSONBin
   };
 
@@ -159,6 +160,11 @@ const JsonBinComponent = () => {
   if (error) {
     return <div>Error: {error}</div>;
   }
+
+  // Calculate the total valid orders
+  const totalValidOrders = data.users
+    ? data.users.filter((user) => user.order !== 'No Order').length
+    : 0;
 
   return (
     <div className="max-w-md mx-auto bg-white p-4 rounded-lg shadow-md mt-10 border border-gray-300 font-mono" style={{
@@ -177,7 +183,7 @@ const JsonBinComponent = () => {
             data.users.map((user, index) => (
               <li
                 key={index}
-                className={`flex justify-between py-2 text-sm ${user.date === today && ordersClosed ? 'bg-green-100' : ''}`}
+                className={`flex justify-between py-2 text-sm ${user.date === today && data.closedOrders ? 'bg-green-100' : ''}`}
               >
                 <span>{user.name}</span>
                 <span className="text-right">{user.order}</span>
@@ -191,7 +197,7 @@ const JsonBinComponent = () => {
         <div className="mt-4 border-t border-gray-300 pt-4">
           <p className="flex justify-between text-sm font-bold">
             <span>Total Items</span>
-            <span>{data.users ? data.users.length : 0}</span>
+            <span>{totalValidOrders}</span>
           </p>
         </div>
       </div>
@@ -237,19 +243,19 @@ const JsonBinComponent = () => {
         <button
           type="submit"
           className="w-full bg-orange-500 text-white rounded px-4 py-2 font-bold hover:bg-orange-600 focus:outline-none"
-          disabled={ordersClosed} // Disable if orders are closed
+          disabled={data.closedOrders} // Disable if orders are closed
         >
           Add Item
         </button>
       </form>
 
-      {/* <button
+      <button
         onClick={handleCloseOrders}
         className="w-full bg-blue-500 text-white rounded px-4 py-2 font-bold hover:bg-blue-600 focus:outline-none mt-4"
-        disabled={ordersClosed} // Disable if orders are already closed
+        disabled={data.closedOrders} // Disable if orders are already closed
       >
         Close Orders
-      </button> */}
+      </button>
     </div>
   );
 };
