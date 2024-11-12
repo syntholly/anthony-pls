@@ -15,7 +15,9 @@ const JsonBinComponent = () => {
   const [order, setOrder] = useState('');
   const [today] = useState(getCurrentDate());
   const [suggestions, setSuggestions] = useState([]);
-  
+  const [password, setPassword] = useState('');
+  const [isAuthorized, setIsAuthorized] = useState(false); // New state for password protection
+
   const BIN_ID = '67175be0acd3cb34a89b03d6';
   const API_KEY = '$2a$10$dhDGoYephc6t09M.V6/9gek5W.YLXLVbEejVGieyKqUmelttmPVCe';
   const BASE_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
@@ -152,6 +154,39 @@ const JsonBinComponent = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  // Check if password is correct
+  const handlePasswordSubmit = (e) => {
+    e.preventDefault();
+    if (password === 'bug') {
+      setIsAuthorized(true); // Set authorized state to true
+    } else {
+      alert('Incorrect password!');
+    }
+  };
+
+  if (!isAuthorized) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <form onSubmit={handlePasswordSubmit} className="bg-white p-4 rounded shadow-md">
+          <label className="block text-sm font-bold mb-2">Enter Password:</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full border border-gray-300 rounded px-3 py-2 mb-2 focus:outline-none"
+            required
+          />
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white rounded px-4 py-2 font-bold hover:bg-blue-600 focus:outline-none"
+          >
+            Submit
+          </button>
+        </form>
+      </div>
+    );
+  }
 
   if (loading) {
     return <div>Loading...</div>;
