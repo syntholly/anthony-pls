@@ -249,13 +249,13 @@ const JsonBinComponent = () => {
         </button>
       </form>
 
-      <button
+      {/* <button
         onClick={handleCloseOrders}
         className="w-full bg-blue-500 text-white rounded px-4 py-2 font-bold hover:bg-blue-600 focus:outline-none mt-4"
         disabled={data.closedOrders} // Disable if orders are already closed
       >
         Close Orders
-      </button>
+      </button> */}
     </div>
   );
 };
