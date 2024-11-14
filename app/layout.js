@@ -1,8 +1,8 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "Store Receipt",
-  description: "A receipt styled page using Next.js and Tailwind CSS",
+  title: "BobaBoba Order Receipt",
+  description: "Make a request for your BobaBoba order!",
 };
 
 export default function RootLayout({ children }) {
