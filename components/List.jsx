@@ -172,6 +172,7 @@ const JsonBinComponent = () => {
           <label className="block text-sm font-bold mb-2">Enter Password:</label>
           <input
             type="password"
+            autoFocus
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full border border-gray-300 rounded px-3 py-2 mb-2 focus:outline-none"
