@@ -257,6 +257,7 @@ const JsonBinComponent = () => {
               {suggestions.map((suggestion, index) => (
                 <li
                   key={index}
+                  tabIndex={1}
                   className="cursor-pointer py-1 px-2 hover:bg-gray-200 max-w-sm"
                   onClick={() => handleSuggestionClick(suggestion)} // Close dropdown on click
                 >
