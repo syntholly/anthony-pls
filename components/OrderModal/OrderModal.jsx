@@ -15,22 +15,22 @@ const OrderModal = () => {
                                 name='user'
                                 id='user'
                                 className='border px-2 py-2 rounded'>
+                                <option value='Anthony Tsang'>
+                                    Anthony Tsang
+                                </option>
+                                <option value='Cara Smart'>Cara Smart</option>
                                 <option value='Chloe McCabe'>
                                     Chloe McCabe
+                                </option>
+                                <option value='Daniel Hing'>Daniel Hing</option>
+                                <option value='Diana Johari'>
+                                    Diana Johari
                                 </option>
                                 <option value='Holly Woodward'>
                                     Holly Woodward
                                 </option>
                                 <option value='Marco Giovannini'>
                                     Marco Giovannini
-                                </option>
-                                <option value='Anthony Tsang'>
-                                    Anthony Tsang
-                                </option>
-                                <option value='Daniel Hing'>Daniel Hing</option>
-                                <option value='Cara Smart'>Cara Smart</option>
-                                <option value='Diana Johari'>
-                                    Diana Johari
                                 </option>
                                 <option value='Scott Wilmott'>
                                     Scott Wilmott
