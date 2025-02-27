@@ -20,7 +20,7 @@ const Table = () => {
     });
 
     return (
-        <div>
+        <div className='select-none'>
             <h2 className='mb-4 font-bold text-3xl'>Masters Division</h2>
             <table className='w-full block'>
                 <thead className='w-full'>
@@ -39,10 +39,18 @@ const Table = () => {
                         <th className='p-2 border text-center'>Match Record</th>
                         <th className='p-2 border text-center'>Match Points</th>
                         <th className='p-2 border hidden lg:table-cell text-right'>
-                            Opponents' Win %
+                            <span
+                                className='cursor-pointer'
+                                title='Randomly generated, chill.'>
+                                Opponents' Win %
+                            </span>
                         </th>
                         <th className='p-2 border hidden lg:table-cell text-right'>
-                            Opponents' Opponent Win %
+                            <span
+                                className='cursor-pointer'
+                                title='Randomly generated, chill.'>
+                                Opponents' Opponent Win %
+                            </span>
                         </th>
                     </tr>
                 </thead>
@@ -50,7 +58,7 @@ const Table = () => {
                     {sortedData.map((player, index) => (
                         <tr
                             key={index}
-                            className='text-left border'>
+                            className='text-left border hover:bg-slate-50'>
                             <td className='p-2 border text-center hidden lg:table-cell'>
                                 {index + 1}
                             </td>
@@ -76,7 +84,9 @@ const Table = () => {
                             <td className='p-2 border hidden lg:table-cell text-center'>
                                 N/A
                             </td>
-                            <td className='p-2 border text-center'>
+                            <td
+                                className='p-2 border text-center'
+                                title='Randomly generated, chill..'>
                                 {determineMatchRecord(player.orders).join('/')}
                             </td>
                             <td className='p-2 border text-center'>
