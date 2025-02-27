@@ -18,7 +18,6 @@ const Header = () => {
             let minutesLeft = targetUtcMinutes - nowUtcMinutes;
             if (minutesLeft < 0) {
                 minutesLeft += 24 * 60; // Move to next day's 5:15 PM
-            } else {
                 setExpired(true);
             }
 
