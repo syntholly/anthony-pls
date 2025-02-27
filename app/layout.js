@@ -1,22 +1,30 @@
-import "./globals.css";
+import './globals.css';
+
+import { EventProvider } from '@/providers/EventProvider';
+
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import { DataProvider } from '@/providers/DataProvider';
 
 export const metadata = {
-  title: "BobaBoba Order Receipt",
-  description: "Make a request for your BobaBoba order!",
+    title: 'TOM (Tea Ordering Matches)',
+    description: 'Sign up for the next Tea Ordering match!',
 };
 
 export default function RootLayout({ children }) {
-  return (
-    <html lang="en">
-      <head>
-        <title>{metadata.title}</title>
-        <meta name="description" content={metadata.description} />
-      </head>
-      <body className="bg-gray-100 min-h-screen">
-        <div className="max-w-4xl mx-auto p-6">
-          {children}
-        </div>
-      </body>
-    </html>
-  );
+    return (
+        <html lang='en'>
+            <body className='antialiased'>
+                <DataProvider>
+                    <EventProvider>
+                        <div className='w-full max-w-6xl p-4'>
+                            <Header />
+                            <main>{children}</main>
+                            <Footer />
+                        </div>
+                    </EventProvider>
+                </DataProvider>
+            </body>
+        </html>
+    );
 }

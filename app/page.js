@@ -1,8 +1,9 @@
-import JsonBinComponent from "@/components/List";
-import Image from "next/image";
+import Table from '@/components/Table';
 
 export default function Home() {
-  return (
-    <div><JsonBinComponent/></div>
-  );
+    return (
+        <div>
+            <Table />
+        </div>
+    );
 }
