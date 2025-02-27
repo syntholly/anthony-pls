@@ -25,31 +25,31 @@ const Table = () => {
             <table className='w-full min-w-full'>
                 <thead>
                     <tr className='text-left border w-full'>
-                        <th className='p-2 border hidden lg:table-cell'>
+                        <th className='p-2 border hidden md:table-cell'>
                             Standing
                         </th>
                         <th className='p-2 border'>Name</th>
                         <th className='p-2 border'>Order</th>
-                        <th className='p-2 border hidden lg:table-cell'>
+                        <th className='p-2 border hidden md:table-cell'>
                             Flight
                         </th>
-                        <th className='p-2 border hidden lg:table-cell text-center'>
+                        <th className='p-2 border hidden md:table-cell text-center'>
                             Drop Round
                         </th>
-                        <th className='p-2 border text-center hidden lg:table-cell'>
+                        <th className='p-2 border text-center hidden md:table-cell'>
                             Match Record
                         </th>
-                        <th className='p-2 border text-center hidden lg:table-cell'>
+                        <th className='p-2 border text-center hidden md:table-cell'>
                             Match Points
                         </th>
-                        <th className='p-2 border hidden lg:table-cell text-right'>
+                        <th className='p-2 border hidden md:table-cell text-right'>
                             <span
                                 className='cursor-pointer'
                                 title='Randomly generated, chill.'>
                                 Opponents' Win %
                             </span>
                         </th>
-                        <th className='p-2 border hidden lg:table-cell text-right'>
+                        <th className='p-2 border hidden md:table-cell text-right'>
                             <span
                                 className='cursor-pointer'
                                 title='Randomly generated, chill.'>
@@ -63,7 +63,7 @@ const Table = () => {
                         <tr
                             key={index}
                             className='text-left border hover:bg-slate-50'>
-                            <td className='p-2 border text-center hidden lg:table-cell'>
+                            <td className='p-2 border text-center hidden md:table-cell'>
                                 {index + 1}
                             </td>
                             <td
@@ -82,28 +82,28 @@ const Table = () => {
                                     player.orders[player.orders.length - 1].name
                                 :   ''}
                             </td>
-                            <td className='p-2 border hidden lg:table-cell text-center'>
+                            <td className='p-2 border hidden md:table-cell text-center'>
                                 {player.emoji}
                             </td>
-                            <td className='p-2 border hidden lg:table-cell text-center'>
+                            <td className='p-2 border hidden md:table-cell text-center'>
                                 N/A
                             </td>
-                            <td className='p-2 border text-center hidden lg:table-cell'>
+                            <td className='p-2 border text-center hidden md:table-cell'>
                                 {determineMatchRecord(player.orders).join('/')}
                             </td>
-                            <td className='p-2 border text-center hidden lg:table-cell'>
+                            <td className='p-2 border text-center hidden md:table-cell'>
                                 {determineMatchPoints(
                                     determineMatchRecord(player.orders),
                                 )}
                             </td>
-                            <td className='p-2 border hidden lg:table-cell text-right'>
+                            <td className='p-2 border hidden md:table-cell text-right'>
                                 {determineOpponentsWin(
                                     player.name,
                                     false,
                                 ).toFixed(2)}
                                 %
                             </td>
-                            <td className='p-2 border hidden lg:table-cell text-right'>
+                            <td className='p-2 border hidden md:table-cell text-right'>
                                 {determineOpponentsWin(
                                     player.name,
                                     true,

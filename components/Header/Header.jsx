@@ -36,7 +36,7 @@ const Header = () => {
 
     return (
         <div>
-            <h2 className='font-bold lg:text-2xl mb-4'>
+            <h2 className='font-bold md:text-2xl mb-4'>
                 Standings - Round {expired ? event.rounds : event.rounds - 1}/
                 {event.rounds} (round ends: {timeLeft})
             </h2>
