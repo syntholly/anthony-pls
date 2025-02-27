@@ -3,10 +3,15 @@
 import React, { useState } from 'react';
 
 const OrderModal = () => {
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
 
     return (
         <div className=''>
+            <button
+                onClick={() => setIsOpen(true)}
+                className='mt-8 px-4 py-2 hover:bg-green-600 bg-green-400 text-white rounded cursor-pointer'>
+                Submit Order
+            </button>
             {isOpen && (
                 <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
                     <div className='bg-white p-6 rounded-lg shadow-lg'>
@@ -49,12 +54,12 @@ const OrderModal = () => {
                             />
                             <button
                                 onClick={() => setIsOpen(false)}
-                                className='px-4 py-2 bg-green-400 text-white rounded cursor-pointer'>
+                                className='mt-4 px-4 py-2 bg-indigo-400 hover:bg-indigo-500 text-white rounded cursor-pointer'>
                                 Submit Order
                             </button>
                             <button
                                 onClick={() => setIsOpen(false)}
-                                className='px-4 py-2 bg-red-400 text-white rounded cursor-pointer'>
+                                className='px-4 py-2 bg-red-300 hover:bg-red-400 text-white rounded cursor-pointer'>
                                 Exit
                             </button>
                         </form>
