@@ -45,8 +45,8 @@ const OrderModal = () => {
             <button
                 onClick={() => setIsOpen(true)}
                 disabled={new Date().getDay() === 2 ? false : true}
-                className='mt-8 px-4 py-2 hover:bg-green-500 transition-colors bg-green-400 disabled:bg-green-200 text-white rounded cursor-pointer'>
-                Submit Order
+                className='mt-8 px-4 py-2 hover:bg-green-500 transition-colors bg-green-400 disabled:bg-green-200 text-white rounded cursor-pointer disabled:cursor-not-allowed'>
+                {new Date().getDay() === 2 ? 'Submit Order' : 'Opens Tuesday'}
             </button>
 
             {isOpen && (

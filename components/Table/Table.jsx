@@ -22,8 +22,8 @@ const Table = () => {
     return (
         <div className='select-none'>
             <h2 className='mb-4 font-bold text-3xl'>Masters Division</h2>
-            <table className='w-full block'>
-                <thead className='w-full'>
+            <table className='w-full min-w-full'>
+                <thead>
                     <tr className='text-left border w-full'>
                         <th className='p-2 border hidden lg:table-cell'>
                             Standing
@@ -36,8 +36,12 @@ const Table = () => {
                         <th className='p-2 border hidden lg:table-cell text-center'>
                             Drop Round
                         </th>
-                        <th className='p-2 border text-center'>Match Record</th>
-                        <th className='p-2 border text-center'>Match Points</th>
+                        <th className='p-2 border text-center hidden lg:table-cell'>
+                            Match Record
+                        </th>
+                        <th className='p-2 border text-center hidden lg:table-cell'>
+                            Match Points
+                        </th>
                         <th className='p-2 border hidden lg:table-cell text-right'>
                             <span
                                 className='cursor-pointer'
@@ -84,12 +88,10 @@ const Table = () => {
                             <td className='p-2 border hidden lg:table-cell text-center'>
                                 N/A
                             </td>
-                            <td
-                                className='p-2 border text-center'
-                                title='Randomly generated, chill..'>
+                            <td className='p-2 border text-center hidden lg:table-cell'>
                                 {determineMatchRecord(player.orders).join('/')}
                             </td>
-                            <td className='p-2 border text-center'>
+                            <td className='p-2 border text-center hidden lg:table-cell'>
                                 {determineMatchPoints(
                                     determineMatchRecord(player.orders),
                                 )}
