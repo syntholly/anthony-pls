@@ -9,15 +9,6 @@ const OrderModal = () => {
     const [orderInput, setOrderInput] = useState('');
     const { data, updateUser } = useData();
 
-    const now = new Date();
-    const daysUntilTuesday = (9 - now.getDay()) % 7 || 7;
-    const nextTuesday = new Date(now);
-    nextTuesday.setDate(now.getDate() + daysUntilTuesday);
-    nextTuesday.setHours(0, 0, 0, 0);
-
-    const countdownMs = nextTuesday - now;
-    const hours = Math.floor(countdownMs / (1000 * 60 * 60));
-
     const handleSubmit = (e) => {
         e.preventDefault();
 
