@@ -5,7 +5,7 @@ const determineMatchRecord = (orders) => {
 
     let W = 0,
         L = 0,
-        D = 0; //
+        D = 0;
 
     for (let i = 1; i < orders.length; i++) {
         let diff = orders[i].date - orders[i - 1].date;

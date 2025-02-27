@@ -26,8 +26,8 @@ const OrderModal = () => {
                     [
                         ...userToUpdate.orders.slice(0, -1),
                         { name: orderInput, date: now },
-                    ] // Replace last order
-                :   [...userToUpdate.orders, { name: orderInput, date: now }]; // Add new order
+                    ]
+                :   [...userToUpdate.orders, { name: orderInput, date: now }];
 
             updateUser({
                 ...userToUpdate,
