@@ -1,11 +1,13 @@
 import './globals.css';
 
+import { SpeedInsights } from '@vercel/speed-insights/next';
+
+import { DataProvider } from '@/providers/DataProvider';
 import { EventProvider } from '@/providers/EventProvider';
 
 import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import { DataProvider } from '@/providers/DataProvider';
 import OrderModal from '@/components/OrderModal';
+import Footer from '@/components/Footer';
 
 export const metadata = {
     title: 'TOM (Tea Ordering Matches)',
@@ -16,6 +18,7 @@ export default function RootLayout({ children }) {
     return (
         <html lang='en'>
             <body className='antialiased'>
+                <SpeedInsights />
                 <DataProvider>
                     <EventProvider>
                         <div className='w-full max-w-6xl p-4'>
