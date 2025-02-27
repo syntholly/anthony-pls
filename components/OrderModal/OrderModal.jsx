@@ -35,6 +35,9 @@ const OrderModal = () => {
                                 <option value='Scott Wilmott'>
                                     Scott Wilmott
                                 </option>
+                                <option value='William Sutandi'>
+                                    William Sutandi
+                                </option>
                             </select>
 
                             <input
