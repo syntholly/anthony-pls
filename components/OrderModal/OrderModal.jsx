@@ -12,26 +12,30 @@ const OrderModal = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Find the user in data[] by name
         const userToUpdate = data.find((user) => user.name === selectedUser);
 
         if (userToUpdate) {
-            const updatedOrderLatest =
-                (
-                    userToUpdate.orderLatest
-                    && Date.now() - userToUpdate.orderLatest > 86400000
-                ) ?
-                    Date.now()
-                :   userToUpdate.orderLatest;
+            const twelveHours = 12 * 60 * 60 * 1000;
+            const now = Date.now();
+            const isRecentOrder =
+                userToUpdate.orderLatest
+                && now - userToUpdate.orderLatest < twelveHours;
+
+            const updatedOrders =
+                isRecentOrder ?
+                    [
+                        ...userToUpdate.orders.slice(0, -1),
+                        { name: orderInput, date: now },
+                    ] // Replace last order
+                :   [...userToUpdate.orders, { name: orderInput, date: now }]; // Add new order
 
             updateUser({
                 ...userToUpdate,
-                orders: [...(userToUpdate.orders || []), orderInput],
-                orderLatest: updatedOrderLatest,
+                orders: updatedOrders,
+                orderLatest: now,
             });
         }
 
-        // Close modal and clear input
         setIsOpen(false);
         setOrderInput('');
     };

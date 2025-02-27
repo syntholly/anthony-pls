@@ -25,7 +25,9 @@ const Table = () => {
             <table className='w-full block'>
                 <thead className='w-full'>
                     <tr className='text-left border w-full'>
-                        <th className='p-2 border'>Standing</th>
+                        <th className='p-2 border hidden lg:table-cell'>
+                            Standing
+                        </th>
                         <th className='p-2 border'>Name</th>
                         <th className='p-2 border'>Order</th>
                         <th className='p-2 border hidden lg:table-cell'>
@@ -49,7 +51,7 @@ const Table = () => {
                         <tr
                             key={index}
                             className='text-left border'>
-                            <td className='p-2 border text-center'>
+                            <td className='p-2 border text-center hidden lg:table-cell'>
                                 {index + 1}
                             </td>
                             <td
@@ -57,7 +59,16 @@ const Table = () => {
                                 {player.name}
                             </td>
                             <td className='p-2 border'>
-                                {player.orders[player.orders.length - 1] ?? ''}
+                                {(
+                                    player.orders.length
+                                    && Date.now()
+                                        - player.orders[
+                                            player.orders.length - 1
+                                        ].date
+                                        < 12 * 60 * 60 * 1000
+                                ) ?
+                                    player.orders[player.orders.length - 1].name
+                                :   ''}
                             </td>
                             <td className='p-2 border hidden lg:table-cell text-center'>
                                 {player.emoji}
