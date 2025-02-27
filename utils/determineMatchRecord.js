@@ -1,6 +1,7 @@
 const determineMatchRecord = (orders) => {
-    const lossDifference = 604800000;
-    const drawDifference = lossDifference * 2 - 86400000;
+    const variance = 86400000; // one day
+    const lossDifference = 604800000 + variance; // 8 days
+    const drawDifference = lossDifference * 2 - variance; // 13 days
 
     let W = 0,
         L = 0,
