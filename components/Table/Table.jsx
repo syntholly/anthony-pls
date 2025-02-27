@@ -56,7 +56,9 @@ const Table = () => {
                                 className={`p-2 border ${index <= 3 ? 'font-bold' : ''}`}>
                                 {player.name}
                             </td>
-                            <td className='p-2 border'>{player.order}</td>
+                            <td className='p-2 border'>
+                                {player.orders[player.orders.length - 1] ?? ''}
+                            </td>
                             <td className='p-2 border hidden lg:table-cell text-center'>
                                 {player.emoji}
                             </td>
