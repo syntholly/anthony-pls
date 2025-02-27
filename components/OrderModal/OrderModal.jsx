@@ -9,6 +9,15 @@ const OrderModal = () => {
     const [orderInput, setOrderInput] = useState('');
     const { data, updateUser } = useData();
 
+    const now = new Date();
+    const daysUntilTuesday = (9 - now.getDay()) % 7 || 7;
+    const nextTuesday = new Date(now);
+    nextTuesday.setDate(now.getDate() + daysUntilTuesday);
+    nextTuesday.setHours(0, 0, 0, 0);
+
+    const countdownMs = nextTuesday - now;
+    const hours = Math.floor(countdownMs / (1000 * 60 * 60));
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -44,9 +53,11 @@ const OrderModal = () => {
         <div>
             <button
                 onClick={() => setIsOpen(true)}
-                className='mt-8 px-4 py-2 hover:bg-green-600 bg-green-400 text-white rounded cursor-pointer'>
+                disabled={new Date().getDay() === 2 ? false : true}
+                className='mt-8 px-4 py-2 hover:bg-green-500 transition-colors bg-green-400 disabled:bg-green-200 text-white rounded cursor-pointer'>
                 Submit Order
             </button>
+
             {isOpen && (
                 <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
                     <div className='bg-white p-6 rounded-lg shadow-lg'>
@@ -86,13 +97,13 @@ const OrderModal = () => {
                             />
                             <button
                                 type='submit'
-                                className='mt-4 px-4 py-2 bg-indigo-400 hover:bg-indigo-500 text-white rounded cursor-pointer'>
+                                className='mt-4 px-4 py-2 bg-indigo-400 transition-colors hover:bg-indigo-500 text-white rounded cursor-pointer'>
                                 Submit Order
                             </button>
                             <button
                                 type='button'
                                 onClick={() => setIsOpen(false)}
-                                className='px-4 py-2 bg-red-300 hover:bg-red-400 text-white rounded cursor-pointer'>
+                                className='px-4 py-2 bg-red-300 hover:bg-red-400 text-white transition-colors rounded cursor-pointer'>
                                 Exit
                             </button>
                         </form>
