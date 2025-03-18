@@ -21,7 +21,9 @@ const Table = () => {
             if (pointsA !== pointsB) {
                 return pointsB - pointsA;
             }
-            return a.name.localeCompare(b.name);
+            const oppWinA = determineOpponentsWin(a.name, false);
+            const oppWinB = determineOpponentsWin(b.name, false);
+            return oppWinB - oppWinA;
         });
     }, [data]);
 
