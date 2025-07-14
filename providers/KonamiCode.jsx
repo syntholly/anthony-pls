@@ -1,10 +1,10 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect } from 'react';
+import {createContext, useContext, useState, useEffect} from 'react';
 
 const KonamiContext = createContext();
 
-export const KonamiProvider = ({ children }) => {
+export const KonamiProvider = ({children}) => {
     const [isKonamiActive, setIsKonamiActive] = useState(false);
 
     useEffect(() => {
@@ -39,11 +39,7 @@ export const KonamiProvider = ({ children }) => {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, []);
 
-    return (
-        <KonamiContext.Provider value={{ isKonamiActive }}>
-            {children}
-        </KonamiContext.Provider>
-    );
+    return <KonamiContext.Provider value={{isKonamiActive}}>{children}</KonamiContext.Provider>;
 };
 
 export const useKonami = () => useContext(KonamiContext);

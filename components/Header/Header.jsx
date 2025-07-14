@@ -1,10 +1,10 @@
 'use client';
 
-import { useEvent } from '@/providers/EventProvider';
-import React, { useEffect, useState } from 'react';
+import {useEvent} from '@/providers/EventProvider';
+import React, {useEffect, useState} from 'react';
 
 const Header = () => {
-    const { event } = useEvent();
+    const {event} = useEvent();
     const [timeLeft, setTimeLeft] = useState('');
     const [expired, setExpired] = useState(false);
 
@@ -36,12 +36,11 @@ const Header = () => {
 
     return (
         <div>
-            <h2 className='font-bold md:text-2xl mb-4'>
-                Standings - Round {expired ? event.rounds : event.rounds - 1}/
-                {event.rounds} (round ends: {timeLeft})
+            <h2 className="mb-4 font-bold md:text-2xl">
+                Standings - Round {expired ? event.rounds : event.rounds - 1}/{event.rounds} (round ends: {timeLeft})
             </h2>
-            <h3 className='mb-6'>
-                Tournament: <span className='font-bold'>{event.name}</span>
+            <h3 className="mb-6">
+                Tournament: <span className="font-bold">{event.name}</span>
             </h3>
         </div>
     );

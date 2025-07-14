@@ -1,13 +1,13 @@
 'use client';
 
-import { useData } from '@/providers/DataProvider';
-import React, { useState } from 'react';
+import {useData} from '@/providers/DataProvider';
+import React, {useState} from 'react';
 
 const OrderModal = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState('');
     const [orderInput, setOrderInput] = useState('');
-    const { data, updateUser } = useData();
+    const {data, updateUser} = useData();
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -17,17 +17,11 @@ const OrderModal = () => {
         if (userToUpdate) {
             const twelveHours = 12 * 60 * 60 * 1000;
             const now = Date.now();
-            const isRecentOrder =
-                userToUpdate.orderLatest
-                && now - userToUpdate.orderLatest < twelveHours;
+            const isRecentOrder = userToUpdate.orderLatest && now - userToUpdate.orderLatest < twelveHours;
 
-            const updatedOrders =
-                isRecentOrder ?
-                    [
-                        ...userToUpdate.orders.slice(0, -1),
-                        { name: orderInput, date: now },
-                    ]
-                :   [...userToUpdate.orders, { name: orderInput, date: now }];
+            const updatedOrders = isRecentOrder
+                ? [...userToUpdate.orders.slice(0, -1), {name: orderInput, date: now}]
+                : [...userToUpdate.orders, {name: orderInput, date: now}];
 
             updateUser({
                 ...userToUpdate,
@@ -45,56 +39,52 @@ const OrderModal = () => {
             <button
                 onClick={() => setIsOpen(true)}
                 disabled={new Date().getDay() === 2 ? false : true}
-                className='mt-8 px-4 py-2 hover:bg-green-500 transition-colors bg-green-400 disabled:bg-green-200 text-white rounded cursor-pointer disabled:cursor-not-allowed'>
+                className="mt-8 cursor-pointer rounded bg-green-400 px-4 py-2 text-white transition-colors hover:bg-green-500 disabled:cursor-not-allowed disabled:bg-green-200"
+            >
                 {new Date().getDay() === 2 ? 'Submit Order' : 'Opens Tuesday'}
             </button>
 
             {isOpen && (
-                <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
-                    <div className='bg-white p-6 rounded-lg shadow-lg'>
-                        <form
-                            className='flex flex-col gap-4'
-                            onSubmit={handleSubmit}>
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="rounded-lg bg-white p-6 shadow-lg">
+                        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
                             <select
-                                name='user'
-                                id='user'
-                                className='border px-2 py-2 rounded'
+                                name="user"
+                                id="user"
+                                className="rounded border px-2 py-2"
                                 value={selectedUser}
-                                onChange={(e) =>
-                                    setSelectedUser(e.target.value)
-                                }>
-                                <option
-                                    value=''
-                                    disabled>
+                                onChange={(e) => setSelectedUser(e.target.value)}
+                            >
+                                <option value="" disabled>
                                     Select a user
                                 </option>
                                 {data.map((user) => (
-                                    <option
-                                        key={user.name}
-                                        value={user.name}>
+                                    <option key={user.name} value={user.name}>
                                         {user.name}
                                     </option>
                                 ))}
                             </select>
 
                             <input
-                                type='text'
-                                name='order'
-                                id='order'
-                                placeholder='Enter order'
-                                className='border p-2 rounded'
+                                type="text"
+                                name="order"
+                                id="order"
+                                placeholder="Enter order"
+                                className="rounded border p-2"
                                 value={orderInput}
                                 onChange={(e) => setOrderInput(e.target.value)}
                             />
                             <button
-                                type='submit'
-                                className='mt-4 px-4 py-2 bg-indigo-400 transition-colors hover:bg-indigo-500 text-white rounded cursor-pointer'>
+                                type="submit"
+                                className="mt-4 cursor-pointer rounded bg-indigo-400 px-4 py-2 text-white transition-colors hover:bg-indigo-500"
+                            >
                                 Submit Order
                             </button>
                             <button
-                                type='button'
+                                type="button"
                                 onClick={() => setIsOpen(false)}
-                                className='px-4 py-2 bg-red-300 hover:bg-red-400 text-white transition-colors rounded cursor-pointer'>
+                                className="cursor-pointer rounded bg-red-300 px-4 py-2 text-white transition-colors hover:bg-red-400"
+                            >
                                 Exit
                             </button>
                         </form>

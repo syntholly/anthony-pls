@@ -1,24 +1,23 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import {createContext, useContext, useEffect, useState} from 'react';
 
 const DataContext = createContext();
 
-export const DataProvider = ({ children }) => {
+export const DataProvider = ({children}) => {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     const BIN_ID = '67bfd1e7e41b4d34e49d8fd1';
-    const API_KEY =
-        '$2a$10$dhDGoYephc6t09M.V6/9gek5W.YLXLVbEejVGieyKqUmelttmPVCe';
+    const API_KEY = '$2a$10$dhDGoYephc6t09M.V6/9gek5W.YLXLVbEejVGieyKqUmelttmPVCe';
     const BASE_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 
     const fetchData = async () => {
         try {
             const response = await fetch(BASE_URL, {
                 method: 'GET',
-                headers: { 'X-Master-Key': API_KEY },
+                headers: {'X-Master-Key': API_KEY},
             });
 
             if (!response.ok) {
@@ -47,9 +46,7 @@ export const DataProvider = ({ children }) => {
         try {
             // Clone data and update the matching object
             const updatedData = [...data];
-            const index = updatedData.findIndex(
-                (item) => item.name === updatedObject.name,
-            );
+            const index = updatedData.findIndex((item) => item.name === updatedObject.name);
 
             if (index !== -1) {
                 updatedData[index] = {
@@ -67,7 +64,7 @@ export const DataProvider = ({ children }) => {
                     'Content-Type': 'application/json',
                     'X-Master-Key': API_KEY,
                 },
-                body: JSON.stringify({ users: updatedData }), // Keeping the same structure
+                body: JSON.stringify({users: updatedData}), // Keeping the same structure
             });
 
             if (!response.ok) throw new Error('Failed to update JSONBin');
@@ -79,14 +76,10 @@ export const DataProvider = ({ children }) => {
         }
     };
 
-    if (loading) return <div className='p-4'>Loading users...</div>;
-    if (error) return <div className='p-4 text-red-500'>Error: {error}</div>;
+    if (loading) return <div className="p-4">Loading users...</div>;
+    if (error) return <div className="p-4 text-red-500">Error: {error}</div>;
 
-    return (
-        <DataContext.Provider value={{ data, updateUser }}>
-            {children}
-        </DataContext.Provider>
-    );
+    return <DataContext.Provider value={{data, updateUser}}>{children}</DataContext.Provider>;
 };
 
 export const useData = () => useContext(DataContext);
