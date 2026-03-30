@@ -14,14 +14,36 @@ export const getLatestOrderName = (orders = [], now = Date.now()) => {
     return latestOrder.name;
 };
 
+const normalizeToppings = (toppings) => {
+    if (Array.isArray(toppings)) {
+        return toppings
+            .filter(Boolean)
+            .map((topping) => ({name: topping, quantity: 1}));
+    }
+
+    if (!toppings || typeof toppings !== 'object') {
+        return [];
+    }
+
+    return Object.entries(toppings)
+        .filter(([, quantity]) => Number.isFinite(quantity) && quantity > 0)
+        .map(([name, quantity]) => ({name, quantity}));
+};
+
 export const formatOrderSelection = (drinkName, toppings = []) => {
     if (!drinkName) {
         return '';
     }
 
-    if (!toppings.length) {
+    const normalizedToppings = normalizeToppings(toppings);
+
+    if (!normalizedToppings.length) {
         return drinkName;
     }
 
-    return `${drinkName} + ${toppings.join(', ')}`;
+    const formattedToppings = normalizedToppings.map(({name, quantity}) => {
+        return quantity > 1 ? `${quantity}x ${name}` : name;
+    });
+
+    return `${drinkName} + ${formattedToppings.join(', ')}`;
 };
