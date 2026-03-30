@@ -1,47 +1,131 @@
 'use client';
 
 import {useData} from '@/providers/DataProvider';
-import React, {useState} from 'react';
+import {formatOrderSelection, isRecentOrder} from '@/utils/orderRules';
+import React, {useEffect, useState} from 'react';
+
+const MENU_STATUS = {
+    idle: 'idle',
+    loading: 'loading',
+    ready: 'ready',
+    error: 'error',
+};
 
 const OrderModal = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState('');
     const [orderInput, setOrderInput] = useState('');
+    const [selectedDrink, setSelectedDrink] = useState('');
+    const [selectedToppings, setSelectedToppings] = useState([]);
+    const [menuOptions, setMenuOptions] = useState({drinks: [], toppings: []});
+    const [menuStatus, setMenuStatus] = useState(MENU_STATUS.idle);
     const {data, updateUser} = useData();
+    const isOrderWindowOpen = new Date().getDay() === 2;
+    const useManualInput = menuStatus === MENU_STATUS.error;
 
-    const handleSubmit = (e) => {
+    useEffect(() => {
+        if (!isOpen || menuStatus === MENU_STATUS.ready) {
+            return;
+        }
+
+        let isCancelled = false;
+
+        const loadMenuOptions = async () => {
+            setMenuStatus(MENU_STATUS.loading);
+
+            try {
+                const response = await fetch('/api/menu-options');
+
+                if (!response.ok) {
+                    throw new Error(`Menu request failed: ${response.status}`);
+                }
+
+                const menu = await response.json();
+
+                if (isCancelled) {
+                    return;
+                }
+
+                setMenuOptions({
+                    drinks: menu.drinks ?? [],
+                    toppings: menu.toppings ?? [],
+                });
+                setMenuStatus(MENU_STATUS.ready);
+            } catch {
+                if (!isCancelled) {
+                    setMenuStatus(MENU_STATUS.error);
+                }
+            }
+        };
+
+        loadMenuOptions();
+
+        return () => {
+            isCancelled = true;
+        };
+    }, [isOpen]);
+
+    const resetForm = () => {
+        setIsOpen(false);
+        setSelectedUser('');
+        setOrderInput('');
+        setSelectedDrink('');
+        setSelectedToppings([]);
+
+        if (menuStatus === MENU_STATUS.error) {
+            setMenuStatus(MENU_STATUS.idle);
+        }
+    };
+
+    const toggleTopping = (topping) => {
+        setSelectedToppings((currentToppings) => {
+            if (currentToppings.includes(topping)) {
+                return currentToppings.filter((item) => item !== topping);
+            }
+
+            return [...currentToppings, topping];
+        });
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const trimmedOrder = orderInput.trim();
+        const formattedMenuOrder = formatOrderSelection(selectedDrink, selectedToppings);
+        const nextOrderName = useManualInput ? trimmedOrder : formattedMenuOrder;
+
+        if (!selectedUser || !nextOrderName) {
+            return;
+        }
 
         const userToUpdate = data.find((user) => user.name === selectedUser);
 
         if (userToUpdate) {
-            const twelveHours = 12 * 60 * 60 * 1000;
             const now = Date.now();
-            const isRecentOrder = userToUpdate.orderLatest && now - userToUpdate.orderLatest < twelveHours;
+            const shouldReplaceLatestOrder = isRecentOrder(userToUpdate.orderLatest, now);
 
-            const updatedOrders = isRecentOrder
-                ? [...userToUpdate.orders.slice(0, -1), {name: orderInput, date: now}]
-                : [...userToUpdate.orders, {name: orderInput, date: now}];
+            const updatedOrders = shouldReplaceLatestOrder
+                ? [...userToUpdate.orders.slice(0, -1), {name: nextOrderName, date: now}]
+                : [...userToUpdate.orders, {name: nextOrderName, date: now}];
 
-            updateUser({
+            await updateUser({
                 ...userToUpdate,
                 orders: updatedOrders,
                 orderLatest: now,
             });
         }
 
-        setIsOpen(false);
-        setOrderInput('');
+        resetForm();
     };
 
     return (
         <div>
             <button
                 onClick={() => setIsOpen(true)}
-                disabled={new Date().getDay() === 2 ? false : true}
+                // disabled={!isOrderWindowOpen}
                 className="mt-8 cursor-pointer rounded bg-green-400 px-4 py-2 text-white transition-colors hover:bg-green-500 disabled:cursor-not-allowed disabled:bg-green-200"
             >
-                {new Date().getDay() === 2 ? 'Submit Order' : 'Opens Tuesday'}
+                {isOrderWindowOpen ? 'Submit Order' : 'Opens Tuesday'}
             </button>
 
             {isOpen && (
@@ -65,24 +149,82 @@ const OrderModal = () => {
                                 ))}
                             </select>
 
-                            <input
-                                type="text"
-                                name="order"
-                                id="order"
-                                placeholder="Enter order"
-                                className="rounded border p-2"
-                                value={orderInput}
-                                onChange={(e) => setOrderInput(e.target.value)}
-                            />
+                            {menuStatus === MENU_STATUS.ready ? (
+                                <>
+                                    <select
+                                        name="drink"
+                                        id="drink"
+                                        className="rounded border px-2 py-2"
+                                        value={selectedDrink}
+                                        onChange={(e) => setSelectedDrink(e.target.value)}
+                                    >
+                                        <option value="" disabled>
+                                            Select a drink
+                                        </option>
+                                        {menuOptions.drinks.map((drink) => (
+                                            <option key={drink} value={drink}>
+                                                {drink}
+                                            </option>
+                                        ))}
+                                    </select>
+
+                                    {menuOptions.toppings.length > 0 && (
+                                        <details className="rounded border p-3">
+                                            <summary className="cursor-pointer font-medium">
+                                                Add toppings ({selectedToppings.length})
+                                            </summary>
+                                            <div className="mt-3 grid max-h-48 grid-cols-2 gap-2 overflow-y-auto text-sm">
+                                                {menuOptions.toppings.map((topping) => (
+                                                    <label
+                                                        key={topping}
+                                                        className="flex items-center gap-2 rounded border px-2 py-1"
+                                                    >
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={selectedToppings.includes(topping)}
+                                                            onChange={() => toggleTopping(topping)}
+                                                        />
+                                                        <span>{topping}</span>
+                                                    </label>
+                                                ))}
+                                            </div>
+                                        </details>
+                                    )}
+                                </>
+                            ) : menuStatus === MENU_STATUS.error ? (
+                                <>
+                                    <input
+                                        type="text"
+                                        name="order"
+                                        id="order"
+                                        placeholder="Enter order"
+                                        className="rounded border p-2"
+                                        value={orderInput}
+                                        onChange={(e) => setOrderInput(e.target.value)}
+                                    />
+                                    <p className="text-sm text-amber-700">
+                                        Bobaboba menu couldn&apos;t be loaded, so manual entry is available.
+                                    </p>
+                                </>
+                            ) : (
+                                <div className="rounded border border-slate-200 bg-slate-50 p-3 text-sm text-slate-600">
+                                    Loading Bobaboba menu...
+                                </div>
+                            )}
                             <button
                                 type="submit"
+                                disabled={
+                                    !selectedUser ||
+                                    (useManualInput ? !orderInput.trim() : !selectedDrink) ||
+                                    menuStatus === MENU_STATUS.loading
+                                }
                                 className="mt-4 cursor-pointer rounded bg-indigo-400 px-4 py-2 text-white transition-colors hover:bg-indigo-500"
                             >
                                 Submit Order
                             </button>
                             <button
                                 type="button"
-                                onClick={() => setIsOpen(false)}
+                                onClick={resetForm}
                                 className="cursor-pointer rounded bg-red-300 px-4 py-2 text-white transition-colors hover:bg-red-400"
                             >
                                 Exit

@@ -1,9 +1,9 @@
 'use client';
 
 import {useData} from '@/providers/DataProvider';
-import determineMatchRecord from '@/utils/determineMatchRecord';
-import determineMatchPoints from '@/utils/determineMatchPoints';
-import determineOpponentsWin from '@/utils/determineOpponentsWin';
+import getPlayerStats from '@/utils/getPlayerStats';
+import getUserSlug from '@/utils/getUserSlug';
+import {getLatestOrderName} from '@/utils/orderRules';
 import React, {useMemo} from 'react';
 import Link from 'next/link';
 
@@ -11,16 +11,21 @@ const Table = () => {
     const {data} = useData();
 
     const sortedData = useMemo(() => {
-        return data.slice().sort((a, b) => {
-            const pointsA = determineMatchPoints(determineMatchRecord(a.orders));
-            const pointsB = determineMatchPoints(determineMatchRecord(b.orders));
-            if (pointsA !== pointsB) {
-                return pointsB - pointsA;
-            }
-            const oppWinA = determineOpponentsWin(a.name, false);
-            const oppWinB = determineOpponentsWin(b.name, false);
-            return oppWinB - oppWinA;
-        });
+        const now = Date.now();
+
+        return data
+            .map((player) => ({
+                player,
+                stats: getPlayerStats(player),
+                latestOrderName: getLatestOrderName(player.orders, now),
+            }))
+            .sort((a, b) => {
+                if (a.stats.matchPoints !== b.stats.matchPoints) {
+                    return b.stats.matchPoints - a.stats.matchPoints;
+                }
+
+                return b.stats.opponentsWin - a.stats.opponentsWin;
+            });
     }, [data]);
 
     return (
@@ -49,33 +54,26 @@ const Table = () => {
                     </tr>
                 </thead>
                 <tbody className="w-full">
-                    {sortedData.map((player, index) => (
-                        <tr key={index} className="border text-left hover:bg-slate-50">
+                    {sortedData.map(({player, stats, latestOrderName}, index) => (
+                        <tr key={player.name} className="border text-left hover:bg-slate-50">
                             <td className="hidden border p-2 text-center md:table-cell">{index + 1}</td>
-                            <td className={`border p-2 ${index <= 3 ? 'font-bold' : ''} w-2/5 md:w-auto`}>
-                                <Link href={`/${player.name.split(' ')[0]}`} className="cursor-pointer" prefetch>
+                            <td className={`w-2/5 border p-2 md:w-auto ${index <= 3 ? 'font-bold' : ''}`}>
+                                <Link href={`/${getUserSlug(player.name)}`} className="cursor-pointer" prefetch>
                                     {player.name}
                                 </Link>
                             </td>
-                            <td className="w-3/5 border p-2 md:w-auto">
-                                {player.orders.length &&
-                                Date.now() - player.orders[player.orders.length - 1].date < 12 * 60 * 60 * 1000
-                                    ? player.orders[player.orders.length - 1].name
-                                    : ''}
-                            </td>
+                            <td className="w-3/5 border p-2 md:w-auto">{latestOrderName}</td>
                             <td className="hidden border p-2 text-center sm:table-cell">{player.emoji}</td>
                             <td className="hidden border p-2 text-center md:table-cell">N/A</td>
                             <td className="hidden border p-2 text-center md:table-cell">
-                                {determineMatchRecord(player.orders).join('/')}
+                                {stats.matchRecord.join('/')}
                             </td>
-                            <td className="hidden border p-2 text-center sm:table-cell">
-                                {determineMatchPoints(determineMatchRecord(player.orders))}
+                            <td className="hidden border p-2 text-center sm:table-cell">{stats.matchPoints}</td>
+                            <td className="hidden border p-2 text-right lg:table-cell">
+                                {stats.opponentsWin.toFixed(2)}%
                             </td>
                             <td className="hidden border p-2 text-right lg:table-cell">
-                                {determineOpponentsWin(player.name, false).toFixed(2)}%
-                            </td>
-                            <td className="hidden border p-2 text-right lg:table-cell">
-                                {determineOpponentsWin(player.name, true).toFixed(2)}%
+                                {stats.opponentsOpponentsWin.toFixed(2)}%
                             </td>
                         </tr>
                     ))}
