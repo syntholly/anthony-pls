@@ -122,7 +122,7 @@ const OrderModal = () => {
         <div>
             <button
                 onClick={() => setIsOpen(true)}
-                // disabled={!isOrderWindowOpen}
+                disabled={!isOrderWindowOpen}
                 className="mt-8 cursor-pointer rounded bg-green-400 px-4 py-2 text-white transition-colors hover:bg-green-500 disabled:cursor-not-allowed disabled:bg-green-200"
             >
                 {isOrderWindowOpen ? 'Submit Order' : 'Opens Tuesday'}
