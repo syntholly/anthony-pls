@@ -135,10 +135,7 @@ const OrderModal = () => {
         : baseOrderName
           ? formatOrderSelection(baseOrderName, selectedToppings)
           : 'Pick a drink or type a custom order';
-    const canSubmit =
-        Boolean(selectedUser) &&
-        Boolean(baseOrderName) &&
-        menuStatus !== MENU_STATUS.loading;
+    const canSubmit = Boolean(selectedUser) && Boolean(baseOrderName) && menuStatus !== MENU_STATUS.loading;
 
     return (
         <div>
@@ -153,38 +150,12 @@ const OrderModal = () => {
             {isOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/55 p-4">
                     <div className="max-h-[90vh] w-full max-w-5xl overflow-hidden rounded-[28px] border border-white/60 bg-white shadow-2xl">
-                        <div className="border-b border-amber-100 bg-gradient-to-r from-amber-50 via-orange-50 to-rose-50 px-6 py-5">
-                            <div className="flex items-start justify-between gap-4">
-                                <div>
-                                    <p className="text-xs font-semibold uppercase tracking-[0.25em] text-amber-700">
-                                        Tuesday Boba Run
-                                    </p>
-                                    <h2 className="mt-2 text-2xl font-bold text-slate-900">Build your order</h2>
-                                    <p className="mt-1 text-sm text-slate-600">
-                                        Pick a menu drink, customise it, or type your own if it&apos;s missing.
-                                    </p>
-                                </div>
-                                <button
-                                    type="button"
-                                    onClick={resetForm}
-                                    className="min-h-10 min-w-10 rounded-full border border-slate-200 bg-white text-lg text-slate-500 transition-colors hover:border-slate-300 hover:text-slate-800"
-                                    aria-label="Close order modal"
-                                >
-                                    ×
-                                </button>
-                            </div>
-                        </div>
-
                         <form
-                            className="grid max-h-[calc(90vh-121px)] gap-6 overflow-y-auto bg-slate-50 p-6 lg:grid-cols-[minmax(0,1.5fr)_minmax(320px,1fr)]"
+                            className="grid max-h-[90vh] gap-6 overflow-y-auto bg-slate-50 p-6 lg:grid-cols-[minmax(0,1.5fr)_minmax(320px,1fr)]"
                             onSubmit={handleSubmit}
                         >
                             <div className="space-y-6">
                                 <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-                                    <div className="mb-4">
-                                        <p className="text-sm font-semibold text-slate-900">1. Who is this for?</p>
-                                        <p className="text-sm text-slate-500">Choose the player so the order lands on the right row.</p>
-                                    </div>
                                     <label className="block text-sm font-medium text-slate-700" htmlFor="user">
                                         Player
                                     </label>
@@ -209,16 +180,14 @@ const OrderModal = () => {
                                 {menuStatus === MENU_STATUS.ready ? (
                                     <>
                                         <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-                                            <div className="mb-4">
-                                                <p className="text-sm font-semibold text-slate-900">2. Pick the drink</p>
-                                                <p className="text-sm text-slate-500">
-                                                    Use the menu dropdown for the common orders, or override it with a custom drink.
-                                                </p>
-                                            </div>
+                                            <p className="mb-4 text-sm font-semibold text-slate-900">Drink</p>
                                             <div className="grid gap-4 md:grid-cols-2">
                                                 <div>
-                                                    <label className="block text-sm font-medium text-slate-700" htmlFor="drink">
-                                                        Bobaboba menu
+                                                    <label
+                                                        className="block text-sm font-medium text-slate-700"
+                                                        htmlFor="drink"
+                                                    >
+                                                        BobaBoba Menu
                                                     </label>
                                                     <select
                                                         name="drink"
@@ -238,34 +207,29 @@ const OrderModal = () => {
                                                     </select>
                                                 </div>
                                                 <div>
-                                                    <label className="block text-sm font-medium text-slate-700" htmlFor="custom-order">
-                                                        Or type a custom order
+                                                    <label
+                                                        className="block text-sm font-medium text-slate-700"
+                                                        htmlFor="custom-order"
+                                                    >
+                                                        Custom Drink
                                                     </label>
                                                     <input
                                                         type="text"
                                                         name="custom-order"
                                                         id="custom-order"
-                                                        placeholder="Anything not on the menu dropdown"
+                                                        placeholder="..."
                                                         className="mt-2 min-h-11 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-amber-400 focus:bg-white"
                                                         value={orderInput}
                                                         onChange={(e) => setOrderInput(e.target.value)}
                                                     />
                                                 </div>
                                             </div>
-                                            <p className="mt-3 text-sm text-slate-500">
-                                                If both fields are filled, the custom order is what gets submitted.
-                                            </p>
                                         </section>
 
                                         {menuOptions.toppings.length > 0 && (
                                             <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
                                                 <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
-                                                    <div>
-                                                        <p className="text-sm font-semibold text-slate-900">3. Add toppings</p>
-                                                        <p className="text-sm text-slate-500">
-                                                            Use the plus and minus buttons to handle duplicates like two strawberry pops.
-                                                        </p>
-                                                    </div>
+                                                    <p className="text-sm font-semibold text-slate-900">Toppings</p>
                                                     <div className="rounded-full bg-amber-100 px-3 py-1 text-sm font-medium text-amber-800">
                                                         {totalToppingCount} topping{totalToppingCount === 1 ? '' : 's'}
                                                     </div>
@@ -284,15 +248,21 @@ const OrderModal = () => {
                                                                 }`}
                                                             >
                                                                 <div className="min-w-0">
-                                                                    <p className="truncate font-medium text-slate-900">{topping}</p>
+                                                                    <p className="truncate font-medium text-slate-900">
+                                                                        {topping}
+                                                                    </p>
                                                                     <p className="text-sm text-slate-500">
-                                                                        {quantity ? `${quantity} selected` : 'Not added'}
+                                                                        {quantity
+                                                                            ? `${quantity} selected`
+                                                                            : 'Not added'}
                                                                     </p>
                                                                 </div>
                                                                 <div className="flex items-center gap-2">
                                                                     <button
                                                                         type="button"
-                                                                        onClick={() => adjustToppingQuantity(topping, -1)}
+                                                                        onClick={() =>
+                                                                            adjustToppingQuantity(topping, -1)
+                                                                        }
                                                                         disabled={!quantity}
                                                                         className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-lg text-slate-700 transition hover:border-slate-300 disabled:cursor-not-allowed disabled:opacity-40"
                                                                         aria-label={`Decrease ${topping}`}
@@ -304,7 +274,9 @@ const OrderModal = () => {
                                                                     </span>
                                                                     <button
                                                                         type="button"
-                                                                        onClick={() => adjustToppingQuantity(topping, 1)}
+                                                                        onClick={() =>
+                                                                            adjustToppingQuantity(topping, 1)
+                                                                        }
                                                                         className="flex h-9 w-9 items-center justify-center rounded-full border border-amber-300 bg-white text-lg text-amber-700 transition hover:border-amber-400 hover:bg-amber-50"
                                                                         aria-label={`Increase ${topping}`}
                                                                     >
@@ -320,12 +292,7 @@ const OrderModal = () => {
                                     </>
                                 ) : menuStatus === MENU_STATUS.error ? (
                                     <section className="rounded-3xl border border-amber-200 bg-amber-50 p-5 shadow-sm">
-                                        <div className="mb-4">
-                                            <p className="text-sm font-semibold text-amber-900">Menu unavailable</p>
-                                            <p className="text-sm text-amber-700">
-                                                Bobaboba couldn&apos;t be loaded right now, so type the full order manually.
-                                            </p>
-                                        </div>
+                                        <p className="mb-4 text-sm font-semibold text-amber-900">Manual order</p>
                                         <label className="block text-sm font-medium text-amber-900" htmlFor="order">
                                             Full drink order
                                         </label>
@@ -342,9 +309,6 @@ const OrderModal = () => {
                                 ) : (
                                     <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
                                         <p className="text-sm font-semibold text-slate-900">Loading Bobaboba menu</p>
-                                        <p className="mt-2 text-sm text-slate-500">
-                                            Pulling the drink and topping options now.
-                                        </p>
                                         <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-100">
                                             <div className="h-full w-1/3 animate-pulse rounded-full bg-amber-300" />
                                         </div>
@@ -371,7 +335,9 @@ const OrderModal = () => {
                                             </p>
                                         </div>
                                         <div>
-                                            <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Final order</p>
+                                            <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
+                                                Final order
+                                            </p>
                                             <p className="mt-1 rounded-2xl bg-white/10 px-4 py-3 text-sm leading-6 text-slate-100">
                                                 {orderPreview}
                                             </p>
