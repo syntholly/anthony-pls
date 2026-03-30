@@ -92,7 +92,7 @@ const OrderModal = () => {
 
         const trimmedOrder = orderInput.trim();
         const formattedMenuOrder = formatOrderSelection(selectedDrink, selectedToppings);
-        const nextOrderName = useManualInput ? trimmedOrder : formattedMenuOrder;
+        const nextOrderName = trimmedOrder || formattedMenuOrder;
 
         if (!selectedUser || !nextOrderName) {
             return;
@@ -168,6 +168,21 @@ const OrderModal = () => {
                                         ))}
                                     </select>
 
+                                    <div className="flex flex-col gap-2">
+                                        <input
+                                            type="text"
+                                            name="custom-order"
+                                            id="custom-order"
+                                            placeholder="Custom order"
+                                            className="rounded border p-2"
+                                            value={orderInput}
+                                            onChange={(e) => setOrderInput(e.target.value)}
+                                        />
+                                        <p className="text-sm text-slate-600">
+                                            If your drink isn&apos;t listed above, enter it here instead.
+                                        </p>
+                                    </div>
+
                                     {menuOptions.toppings.length > 0 && (
                                         <details className="rounded border p-3">
                                             <summary className="cursor-pointer font-medium">
@@ -215,7 +230,7 @@ const OrderModal = () => {
                                 type="submit"
                                 disabled={
                                     !selectedUser ||
-                                    (useManualInput ? !orderInput.trim() : !selectedDrink) ||
+                                    (!orderInput.trim() && !selectedDrink) ||
                                     menuStatus === MENU_STATUS.loading
                                 }
                                 className="mt-4 cursor-pointer rounded bg-indigo-400 px-4 py-2 text-white transition-colors hover:bg-indigo-500"
